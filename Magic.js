@@ -5,10 +5,14 @@ var request = require("request"),
 var writemagictrollcard=fs.createWriteStream("MagicTrollandToadOutput.csv");
 var writemagicchannelfireballcard=fs.createWriteStream("MagicChannelFireballCardOutput.csv");
 writemagictrollcard.write("Name");
-writemagictrollcard.write(", Troll and Toad");
+writemagictrollcard.write(", Troll and Toad card price");
+writemagictrollcard.write(", Total Magic card price");
 writemagicchannelfireballcard.write("Name")
 writemagicchannelfireballcard.write(", Channel Fireball");
+writemagicchannelfireballcard.write(", Total Magic card price");
 var lineNum = 0;
+var TrollandToadPrice=0;
+var ChannelFireballPrice=0;
 var columns = [];
 var card = [];
 
@@ -44,7 +48,8 @@ request(url, function (error, response, body) {
     console.log("The Card "+Card.CardName+" price is "+ price +" at Troll and Toad");
 	writemagictrollcard.write("\n" + Card.CardName);
 	writemagictrollcard.write("," + price);
-	
+	TrollandToadPrice=TrollandToadPrice+(parseFloat(price.substr(1)));
+	writemagictrollcard.write("," + TrollandToadPrice);
 	 url = "http://store.channelfireball.com/products/search?query="+Card.CardName;
 	
   } else {
@@ -63,6 +68,8 @@ request(url, function (error, response, body) {
 	console.log("The Card "+Card.CardName+" price is "+ price +" at Channel Fireball");
 	writemagicchannelfireballcard.write("\n" + Card.CardName);
 	writemagicchannelfireballcard.write("," + price);
+	ChannelFireballPrice= ChannelFireballPrice+(parseFloat(price.substr(1)));
+	writemagicchannelfireballcard.write("," + ChannelFireballPrice);
   } else {
     console.log("We’ve encountered an error: " + error);
   }
